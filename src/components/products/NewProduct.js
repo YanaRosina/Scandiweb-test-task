@@ -8,7 +8,14 @@ import { useState } from "react";
 function NewProduct(props) {
 
     const [currentType,setCurrentType] = useState("");
-    const { register, handleSubmit } = useForm();
+    const { register,
+        formState: { errors },
+        handleSubmit
+    } = useForm({
+        mode:"onBlur"
+    });
+
+    const countPatern = new RegExp("^d+(?:\.d+)?$");
 
     let upState = (state) => {
         setCurrentType(state);
@@ -49,14 +56,23 @@ function NewProduct(props) {
         </div>
         <div className={classes.param_block}>
             <label htmlFor="title">Price</label>
-            <input name="price" type="text" required id="price" {...register("price")} />
+            <input name="price" type="text" required id="price" {...register("price", {
+                required: "The field must be filled in",
+                pattern: {
+                    value:/^\d+(?:\.\d+)?$/,
+                    message: "Enter an integer or fractional number"
+                }
+          
+            })} />
+            <label className={classes.error}>{errors?.price && errors?.price?.message}</label>
         </div>
 
 
         <TypeSwitcher 
         register={register}
         types={props.types}
-        transferState={upState} />
+        transferState={upState}
+        errors={errors} />
     </form>
 }
 

@@ -65,8 +65,17 @@ function TypeSwitcher (props) {
     return <div className={classes.option_block}>
     <label htmlFor="title">{propsOption.text}</label>
     <input type="text" required id={propsOption.name} {...props.register(propsOption.type+"_"+propsOption.name, {
+        required: "The field must be filled in",
+        pattern: {
+            value: /^\d+(?:\.\d+)?$/,
+            message: "Enter an integer or fractional number"
+        }
         
-    })} />
+    })}
+    />
+    <label>{
+    propsOption.errors?.propsOption.name && propsOption.errors?.propsOption.name?.message
+    }</label>
     </div>
     
         
