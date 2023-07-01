@@ -1,9 +1,14 @@
 import classes from './TypeSwitcher.module.sass';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { ErrorMessage} from '@hookform/error-message';
 
 function TypeSwitcher (props) {
     const dataTypes = props.types;
+
+    
+   
+   
     let typeNames = GetTypes();
 
     const [productType, setProductType] = useState("");
@@ -45,7 +50,7 @@ function TypeSwitcher (props) {
              
                 paramBlock.push( <CreateOption 
                    text={param.paramName+' ('+param.measureUnit+')'}
-                   name={param.paramName} key={param.paramName} type={type.typeName} />)
+                   name={param.paramName} key={param.paramName} type={type.typeName}  />)
                 }   
                     
                 return <>
@@ -61,10 +66,16 @@ function TypeSwitcher (props) {
    
     function CreateOption (propsOption) {
 
+        
+        const name = propsOption.name;
+        const type = propsOption.type;
+        const typeName = type+"_"+name;
+        const errors = props.errors;
+
     
     return <div className={classes.option_block}>
     <label htmlFor="title">{propsOption.text}</label>
-    <input type="text" required id={propsOption.name} {...props.register(propsOption.type+"_"+propsOption.name, {
+    <input type="text" required id={name} {...props.register(typeName, {
         required: "The field must be filled in",
         pattern: {
             value: /^\d+(?:\.\d+)?$/,
@@ -73,9 +84,12 @@ function TypeSwitcher (props) {
         
     })}
     />
-    <label>{
-    propsOption.errors?.propsOption.name && propsOption.errors?.propsOption.name?.message
-    }</label>
+    <ErrorMessage
+    errors={errors}
+    name={typeName}
+    render={({message}) => <label className={classes.error}>{message}</label>}
+     />
+   
     </div>
     
         
@@ -95,7 +109,7 @@ function TypeSwitcher (props) {
             <select  
                 name="option" 
                 id="productType" 
-                {...props.register("type")}
+                {...props.register("type", {required: true})}
                 defaultValue={"DEFAULT"}
                 onChange={SwitchHandler} >
                 <option disabled value="DEFAULT">TypeSwitcher</option>

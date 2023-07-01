@@ -15,11 +15,12 @@ function NewProduct(props) {
         mode:"onBlur"
     });
 
-    const countPatern = new RegExp("^d+(?:\.d+)?$");
+    
 
     let upState = (state) => {
         setCurrentType(state);
     }
+
 
 
     function SubmitHandler(data) {
@@ -48,11 +49,13 @@ function NewProduct(props) {
    return <form id="product_form" onSubmit={handleSubmit(SubmitHandler)} >
         <div className={classes.param_block}>
             <label htmlFor="title">SKU</label>
-            <input name="sku" type="text" required id="sku" {...register("sku")} />
+            <input name="sku" type="text" required id="sku" {...register("sku", {required:"The field must be filled in"})} />
+            <label className={classes.error}>{errors?.sku && errors.sku?.message}</label>
         </div>
         <div className={classes.param_block}>
             <label htmlFor="title">Name</label>
-            <input name="name" type="text" required id="name" {...register("name")} />
+            <input name="name" type="text" required id="name" {...register("name", {required:"The field must be filled in"})} />
+            <label className={classes.error}>{errors?.name && errors.name?.message}</label>
         </div>
         <div className={classes.param_block}>
             <label htmlFor="title">Price</label>
@@ -64,7 +67,7 @@ function NewProduct(props) {
                 }
           
             })} />
-            <label className={classes.error}>{errors?.price && errors?.price?.message}</label>
+            <label className={classes.error}>{errors?.price && errors.price?.message}</label>
         </div>
 
 
@@ -72,7 +75,7 @@ function NewProduct(props) {
         register={register}
         types={props.types}
         transferState={upState}
-        errors={errors} />
+        errors={errors}/>
     </form>
 }
 
